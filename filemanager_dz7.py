@@ -22,16 +22,24 @@ def create_dir():
 
 
 def delete_file_dir():
-    new_path = input('Введите имя папки/файла для удаления')
-    if not os.path.exists(new_path):
-        message = 'Папка/файл не существует!'
-    elif os.path.isdir(new_path):
-        shutil.rmtree(new_path)       #удалить каталог
-        message = 'Удалена папка: '+ new_path
-    else:
-        os.remove(os.path.join(curr_path, new_path))           #удалить файл
-        message = 'Удален файл: '+ new_path
-    return message
+    while True:
+        new_path = input('Введите имя папки/файла для удаления')
+        full_path = os.path.join(os.getcwd(), new_path)
+        if os.path.exists(full_path):
+            if os.path.isfile(full_path):
+                try:
+                    os.remove(full_path)
+                    print('Файл удален')
+                    break
+                except FileNotFoundError:
+                    print('Файл не существует!')
+                    continue
+            try:
+                shutil.rmtree(full_path)
+                print('Папка удалена')
+                break
+            except FileNotFoundError:
+                print('Файл не существует!')
 
 
 def copy_file_dir():
@@ -47,14 +55,19 @@ def copy_file_dir():
         message = 'Создана копия файла: '+ in_path
     return message
 
+
 def show_list():
     print(os.listdir())   #список файлов и директорий в папке
 
 def show_dir():
-    print('Папки: ', list(filter(lambda x: os.path.isdir(x), os.listdir())))
+    #print('Папки: ', list(filter(lambda x: os.path.isdir(x), os.listdir())))
+    result = [x for x in os.listdir() if os.path.isdir(x)]
+    print(result)
 
 def show_files():
-    print('Файлы:', list(filter(lambda x: os.path.isfile(x), os.listdir())))
+    #print('Файлы:', list(filter(lambda x: os.path.isfile(x), os.listdir())))
+    result = [x for x in os.listdir() if os.path.isfile(x)]
+    print(result)
 
 def show_os():
     print('Операционная система:', os.name)
@@ -81,6 +94,9 @@ def save_content():
         f.write('dirs: ')
         for dir in dirs:
             f.write(f'{dir}, ')
+
+
+
 
 
 
